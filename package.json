@@ -1,5 +1,5 @@
 {
-	"name": "workflows-starter",
+	"name": "hpke-key-directory-over-http",
 	"version": "0.0.1",
 	"scripts": {
 		"deploy": "wrangler deploy",
@@ -18,5 +18,9 @@
 		"overrides": {
 			"esbuild": "0.21.4"
 		}
+	},
+	"dependencies": {
+		"asn1js": "^3.0.5",
+		"itty-router": "^5.0.18"
 	}
 }
