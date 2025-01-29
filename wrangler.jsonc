@@ -17,9 +17,13 @@
       "bucket_name": "thibault-test-rotation-workflow"
     }
   ],
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  },
   "vars": {
-    "DIRECTORY_CACHE_MAX_AGE_SECONDS": "300",
-    "KEY_NOT_BEFORE_DELAY_IN_MS": "60000",
+    "DIRECTORY_CACHE_MAX_AGE_SECONDS": "300", // 5min
+    "KEY_LIFESPAN_IN_MS": "600000", // 10min
+    "KEY_NOT_BEFORE_DELAY_IN_MS": "60000", // 1min
     "MINIMUM_FRESHEST_KEYS": "2"
   },
   "workflows": [

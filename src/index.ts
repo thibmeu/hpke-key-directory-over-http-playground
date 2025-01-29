@@ -4,15 +4,15 @@ import { handler as coseHandler } from './directoryHandlers/ietf-hpke-cose-key-s
 import { handler as joseHandler } from './directoryHandlers/ietf-hpke-jwks';
 import { handler as jwksHandler } from './directoryHandlers/openidconnect-jwks';
 import { handler as privacypassHandler } from './directoryHandlers/privacypass';
-import { handler as rotationHandler } from './rotation';
-import { Env } from './bindings';
+import { clearKeyHandler, rotationHandler } from './rotation';
+import { Bindings } from './bindings';
 import { textToResponse } from './html';
 
 export * from './rotation'
 
 const router = AutoRouter()
 
-export function handleHead <T extends (request: Request, env: Env) => Promise<Response>>(f: T): T {
+export function handleHead <T extends (request: Request, env: Bindings) => Promise<Response>>(f: T): T {
 	return (async (request, env) => {
 		const response = await f(request, env)
 		return new Response(undefined, {
@@ -26,6 +26,10 @@ export function index() {
 	const body = `# HPKE Key Directory over HTTP
 
 github.com/thibmeu/hpke-key-directory-over-http-playground
+
+## FAQ
+
+Key rotate every 5 minutes
 
 ## Endpoints
 
@@ -47,7 +51,15 @@ router
   .get('/openid-connect/jwks.json', jwksHandler)
   .head('/.well-known/private-token-key-directory', handleHead(privacypassHandler))
   .get('/.well-known/private-token-key-directory', privacypassHandler)
-  .post('/admin/rotate', rotationHandler)
+  .post('/admin/clear', (_req, env) => clearKeyHandler(env))
+  .post('/admin/rotate', (_req, env) => rotationHandler(env))
   .all('*', () => Response.redirect('/'))
 
-export default { ...router }
+export default {
+	...router,
+
+	async scheduled(_event: ScheduledEvent, env: Bindings, _ectx: ExecutionContext) {
+	  console.log(await (await clearKeyHandler(env)).text())
+      console.log(await(await rotationHandler(env)).text())
+	}
+}

@@ -1,7 +1,7 @@
-import { Env } from "../bindings";
+import { Bindings } from "../bindings";
 import { textToResponse } from "../html";
 
-export async function handler(req: Request, env: Env): Promise<Response> {
+export async function handler(req: Request, env: Bindings): Promise<Response> {
     const text = `<a href="/">⮪</a>
 # IETF HPKE JWKS format
 

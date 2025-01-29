@@ -1,11 +1,11 @@
 import { WorkflowEntrypoint, WorkflowEvent, WorkflowStep } from "cloudflare:workers";
-import { Env } from "./bindings";
+import { Bindings } from "./bindings";
 import { convertEncToRSASSAPSS } from "./crypto";
 import { b64ToB64URL, u8ToB64 } from "./encoding/base64";
 
 type Params = {};
 
-export class RotationWorkflow extends WorkflowEntrypoint<Env, Params> {
+export class RotationWorkflow extends WorkflowEntrypoint<Bindings, Params> {
 	async run(event: WorkflowEvent<Params>, step: WorkflowStep) {
 		// Can access bindings on `this.env`
 		// Can access params on `event.payload`
@@ -68,7 +68,7 @@ export async function keyToTokenKeyID(key: Uint8Array): Promise<number> {
 	return u8[u8.length - 1];
 };
 
-export async function handler(req: Request, env: Env): Promise<Response> {
+export async function rotationHandler(env: Bindings): Promise<Response> {
 	let publicKeyEnc: string;
 	let tokenKeyID: number;
 	let privateKey: ArrayBuffer;
@@ -107,4 +107,57 @@ export async function handler(req: Request, env: Env): Promise<Response> {
 		customMetadata: metadata,
 	});
     return new Response(publicKeyEnc)
+}
+
+export function shouldClearKey(keyNotBefore: Date, lifespanInMs: number): boolean {
+	const keyExpirationTime = keyNotBefore.getTime() + lifespanInMs;
+	return Date.now() > keyExpirationTime;
+}
+
+export async function clearKeyHandler(env: Bindings): Promise<Response> {
+	const keys = await env.KEYS.list();
+
+	if (keys.objects.length === 0) {
+		return new Response('No keys to clear', { status: 201 });
+	}
+
+	const lifespanInMs = Number.parseInt(env.KEY_LIFESPAN_IN_MS);
+	const freshestKeyCount = Number.parseInt(env.MINIMUM_FRESHEST_KEYS);
+
+	keys.objects.sort((a, b) => new Date(b.uploaded).getTime() - new Date(a.uploaded).getTime());
+
+	const toDelete: Set<string> = new Set();
+
+	for (let i = 0; i < keys.objects.length; i++) {
+		const key = keys.objects[i];
+		const notBefore = key.customMetadata?.notBefore;
+		let keyNotBefore: Date;
+		if (notBefore) {
+			keyNotBefore = new Date(Number.parseInt(notBefore) * 1000);
+		} else {
+			keyNotBefore = new Date(key.uploaded);
+		}
+
+		const isFreshest = i < freshestKeyCount;
+
+		if (isFreshest) {
+			continue;
+		}
+
+		const shouldDelete = shouldClearKey(keyNotBefore, lifespanInMs);
+
+		if (shouldDelete) {
+			toDelete.add(key.key);
+		}
+	}
+
+	const toDeleteArray = [...toDelete];
+
+	if (toDeleteArray.length === 0) {
+		return new Response('No keys to clear', { status: 201 });
+	}
+
+	await env.KEYS.delete(toDeleteArray);
+
+	return new Response(`Keys cleared: ${toDeleteArray.join('\n')}`, { status: 201 });
 }

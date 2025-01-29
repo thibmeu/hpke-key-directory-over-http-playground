@@ -1,9 +1,9 @@
-import { Env } from "../bindings";
+import { Bindings } from "../bindings";
 import { hexEncode } from "../encoding/hex";
 import { responseToInnerText, textToResponse } from "../html";
 import { StorageMetadata } from "../rotation";
 
-export async function handler(req: Request, env: Env): Promise<Response> {
+export async function handler(req: Request, env: Bindings): Promise<Response> {
     // todo: consider cache
 
 	const keyList = await env.KEYS.list({ include: ['customMetadata'] });
