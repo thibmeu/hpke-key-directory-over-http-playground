@@ -49,7 +49,7 @@ export async function handler(req: Request, env: Env): Promise<Response> {
     const text = `<a href="/">⮪</a>
 # Privacy Pass format
 
-https://www.rfc-editor.org/rfc/rfc9578.html#name-configuration
+<a href="https://www.rfc-editor.org/rfc/rfc9578.html#name-configuration">https://www.rfc-editor.org/rfc/rfc9578.html#name-configuration</a>
 
 ## Request
 GET /.well-known/private-token-issuer-directory

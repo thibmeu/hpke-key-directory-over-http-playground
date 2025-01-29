@@ -5,10 +5,10 @@ export async function handler(req: Request, env: Env): Promise<Response> {
     const text = `<a href="/">⮪</a>
 # OpenID Connect JWKS format
 
-https://openid.net/specs/openid-connect-core-1_0.html#RotateSigKeys
+<a href="https://openid.net/specs/openid-connect-core-1_0.html#RotateSigKeys">https://openid.net/specs/openid-connect-core-1_0.html#RotateSigKeys</a>
 
 ## Request
-GET /.well-known/jwks.json
+GET /openid-connect/jwks.json
 
 ## Response
 Not implemented yet
