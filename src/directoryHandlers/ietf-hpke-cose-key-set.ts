@@ -31,7 +31,7 @@ export async function handler(req: Request, env: Bindings): Promise<Response> {
     publicKeyCoseKeyMap.set(2, new Uint8Array([Number.parseInt(metadata.tokenKeyID)]));
     publicKeyCoseKeyMap.set(3, 37); // HPKE-1  DHKEM(P-384, HKDF-SHA384) KEM, the HKDF-SHA384 KDF, and the AES-256-GCM AEAD
     // publicKeyCoseKeyMap.set(4, [3]); // not required for public keys - encrypt https://datatracker.ietf.org/doc/html/rfc8152#section-7.1
-    publicKeyCoseKeyMap.set(-1, 2) // P-384 https://www.iana.org/assignments/cose/cose.xhtml#elliptic-curves
+    publicKeyCoseKeyMap.set(-1, 2); // P-384 https://www.iana.org/assignments/cose/cose.xhtml#elliptic-curves
     // TODO: generate a real key, don't reuse a signature scheme
     publicKeyCoseKeyMap.set(-2, b64Tou8(b64URLtoB64(publicKeyJwk.n!))); // MUST BE x
     publicKeyCoseKeyMap.set(-3, b64Tou8(b64URLtoB64(publicKeyJwk.e!))); // MUST BE y
@@ -54,7 +54,11 @@ ${hexEncode(directory)
   .join(' ')}
 
 ### COSE Key Set as JSON Map
-${JSON.stringify(keysCoseDecoded.map(m => Object.fromEntries(m)), null, 2)}
+${JSON.stringify(
+  keysCoseDecoded.map((m) => Object.fromEntries(m)),
+  null,
+  2,
+)}
 `;
 
   const response = new Response(body, {

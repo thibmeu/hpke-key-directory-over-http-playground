@@ -25,7 +25,7 @@ export function handleHead<T extends (request: Request, env: Bindings) => Promis
 export function index() {
   const body = `# Key Directory over HTTP
 
-<a href="https://github.com/thibmeu/hpke-key-directory-over-http-playground">github.com/thibmeu/hpke-key-directory-over-http-playground</a>
+<a href="https://github.com/thibmeu/key-directory-over-http-playground">github.com/thibmeu/key-directory-over-http-playground</a>
 
 Keys rotate every 5 minutes
 
