@@ -69,6 +69,11 @@ export default {
     }
 
     const status = await workflow.status();
+
+    if (status.status !== 'running') {
+      await workflow.restart();
+    }
+
     console.log(`started workflow ${id}. Status ${status.status}`);
   },
 };
