@@ -68,6 +68,7 @@ export default {
       workflow = await env.ROTATION.create({ id });
     }
 
-    console.log(`started workflow ${id}. Status ${await workflow.status()}`);
+    const status = await workflow.status();
+    console.log(`started workflow ${id}. Status ${status.status}`);
   },
 };
