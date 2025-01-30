@@ -23,13 +23,11 @@ export function handleHead<T extends (request: Request, env: Bindings) => Promis
 }
 
 export function index() {
-  const body = `# HPKE Key Directory over HTTP
+  const body = `# Key Directory over HTTP
 
 <a href="https://github.com/thibmeu/hpke-key-directory-over-http-playground">github.com/thibmeu/hpke-key-directory-over-http-playground</a>
 
-## FAQ
-
-Key rotate every 5 minutes
+Keys rotate every 5 minutes
 
 ## Endpoints
 
@@ -38,7 +36,7 @@ Key rotate every 5 minutes
 <a href="/openid-connect/jwks.json">GET /openid-connect/jwks.json</a>
 <a href="/.well-known/private-token-key-directory">GET /.well-known/private-token-key-directory</a>
 `;
-  return textToResponse(`HPKE Key Directory over HTTP`, body);
+  return textToResponse(`Key Directory over HTTP`, body);
 }
 
 router

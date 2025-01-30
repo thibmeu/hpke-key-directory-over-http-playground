@@ -1,5 +1,5 @@
 {
-  "name": "hpke-key-directory-over-http",
+  "name": "key-directory-over-http",
   "version": "0.0.1",
   "scripts": {
     "deploy": "wrangler deploy",

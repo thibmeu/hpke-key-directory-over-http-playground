@@ -1,6 +1,6 @@
-# HPKE Key Directory over HTTP playground
+# Key Directory over HTTP playground
 
-This playground aims to illustrate [HPKE Key Directory over HTTP specification](https://github.com/thibmeu/draft-darling-ohai-hpke-key-directory-over-http).
+This playground aims to illustrate [Key Directory over HTTP specification](https://github.com/thibmeu/draft-darling-ohai-hpke-key-directory-over-http).
 
 ## Requirements
 
