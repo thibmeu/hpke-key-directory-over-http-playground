@@ -59,7 +59,15 @@ export default {
 	...router,
 
 	async scheduled(_event: ScheduledEvent, env: Bindings, _ectx: ExecutionContext) {
-	  console.log(await (await clearKeyHandler(env)).text())
-      console.log(await(await rotationHandler(env)).text())
+		// dev note: should there be a different flow for each protocol?
+		const id = 'rotation-workflow'
+		let workflow: WorkflowInstance
+		try {
+			workflow = await env.ROTATION.get(id)
+		} catch (_) {
+			workflow = await env.ROTATION.create({ id })
+		}
+
+		console.log(`started workflow ${id}. Status ${await workflow.status()}`)
 	}
 }

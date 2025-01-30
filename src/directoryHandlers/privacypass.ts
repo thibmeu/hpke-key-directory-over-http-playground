@@ -1,22 +1,12 @@
 import { Bindings } from "../bindings";
 import { hexEncode } from "../encoding/hex";
 import { responseToInnerText, textToResponse } from "../html";
-import { StorageMetadata } from "../rotation";
+import { r2Keys, StorageMetadata } from "../rotation";
 
 export async function handler(req: Request, env: Bindings): Promise<Response> {
     // todo: consider cache
 
-	const keyList = await env.KEYS.list({ include: ['customMetadata'] });
-
-	if (keyList.objects.length === 0) {
-		throw new Error('directory not initialised');
-	}
-
-	// there is no reason for an auditor to continue serving keys beyond the minimum requirement
-	const freshestKeyCount = Number.parseInt(env.MINIMUM_FRESHEST_KEYS);
-	const keys = keyList.objects
-		.sort((a, b) => new Date(b.uploaded).getTime() - new Date(a.uploaded).getTime())
-		.slice(0, freshestKeyCount);
+	const keys = await r2Keys(env);
 
 	const directory = {
 		'issuer-request-uri': '/token-request',
@@ -38,7 +28,7 @@ export async function handler(req: Request, env: Bindings): Promise<Response> {
 
 	const response = new Response(body, {
 		headers: {
-			'content-type': "text/plain", // text/plain so people can see a response
+			'content-type': "application/private-token-issuer-directory",
 			'cache-control': `public, max-age=${Number.parseInt(env.DIRECTORY_CACHE_MAX_AGE_SECONDS)}`,
 			'content-length': body.length.toString(),
 			'date': new Date().toUTCString(),
