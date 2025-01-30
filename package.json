@@ -1,26 +1,29 @@
 {
-	"name": "hpke-key-directory-over-http",
-	"version": "0.0.1",
-	"scripts": {
-		"deploy": "wrangler deploy",
-		"start": "wrangler dev"
-	},
-	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20250124.3",
-		"typescript": "^5.0.4",
-		"wrangler": "^3.106.0"
-	},
-	"packageManager": "pnpm@9.1.4",
-	"engines": {
-		"pnpm": "^9.1.4"
-	},
-	"pnpm": {
-		"overrides": {
-			"esbuild": "0.21.4"
-		}
-	},
-	"dependencies": {
-		"asn1js": "^3.0.5",
-		"itty-router": "^5.0.18"
-	}
+  "name": "hpke-key-directory-over-http",
+  "version": "0.0.1",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "format": "prettier --write .",
+    "lint": "prettier --check .",
+    "start": "wrangler dev"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250124.3",
+    "prettier": "^3.4.2",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.106.0"
+  },
+  "packageManager": "pnpm@9.1.4",
+  "engines": {
+    "pnpm": "^9.1.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.21.4"
+    }
+  },
+  "dependencies": {
+    "asn1js": "^3.0.5",
+    "itty-router": "^5.0.18"
+  }
 }

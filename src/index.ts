@@ -8,22 +8,22 @@ import { clearKeyHandler, rotationHandler } from './rotation';
 import { Bindings } from './bindings';
 import { textToResponse } from './html';
 
-export * from './rotation'
+export * from './rotation';
 
-const router = AutoRouter()
+const router = AutoRouter();
 
-export function handleHead <T extends (request: Request, env: Bindings) => Promise<Response>>(f: T): T {
-	return (async (request, env) => {
-		const response = await f(request, env)
-		return new Response(undefined, {
-			status: response.status,
-			headers: response.headers,
-		})
-	}) as T
-};
+export function handleHead<T extends (request: Request, env: Bindings) => Promise<Response>>(f: T): T {
+  return (async (request, env) => {
+    const response = await f(request, env);
+    return new Response(undefined, {
+      status: response.status,
+      headers: response.headers,
+    });
+  }) as T;
+}
 
 export function index() {
-	const body = `# HPKE Key Directory over HTTP
+  const body = `# HPKE Key Directory over HTTP
 
 github.com/thibmeu/hpke-key-directory-over-http-playground
 
@@ -37,8 +37,8 @@ Key rotate every 5 minutes
 <a href="/ietf-hpke-jose/jwks.json">GET /ietf-hpke-jose/jwks.json</a>
 <a href="/openid-connect/jwks.json">GET /openid-connect/jwks.json</a>
 <a href="/.well-known/private-token-key-directory">GET /.well-known/private-token-key-directory</a>
-`
-  return textToResponse(`HPKE Key Directory over HTTP`, body)
+`;
+  return textToResponse(`HPKE Key Directory over HTTP`, body);
 }
 
 router
@@ -53,21 +53,21 @@ router
   .get('/.well-known/private-token-key-directory', privacypassHandler)
   .post('/admin/clear', (_req, env) => clearKeyHandler(env))
   .post('/admin/rotate', (_req, env) => rotationHandler(env))
-  .all('*', () => Response.redirect('/'))
+  .all('*', () => Response.redirect('/'));
 
 export default {
-	...router,
+  ...router,
 
-	async scheduled(_event: ScheduledEvent, env: Bindings, _ectx: ExecutionContext) {
-		// dev note: should there be a different flow for each protocol?
-		const id = 'rotation-workflow'
-		let workflow: WorkflowInstance
-		try {
-			workflow = await env.ROTATION.get(id)
-		} catch (_) {
-			workflow = await env.ROTATION.create({ id })
-		}
+  async scheduled(_event: ScheduledEvent, env: Bindings, _ectx: ExecutionContext) {
+    // dev note: should there be a different flow for each protocol?
+    const id = 'rotation-workflow';
+    let workflow: WorkflowInstance;
+    try {
+      workflow = await env.ROTATION.get(id);
+    } catch (_) {
+      workflow = await env.ROTATION.create({ id });
+    }
 
-		console.log(`started workflow ${id}. Status ${await workflow.status()}`)
-	}
-}
+    console.log(`started workflow ${id}. Status ${await workflow.status()}`);
+  },
+};

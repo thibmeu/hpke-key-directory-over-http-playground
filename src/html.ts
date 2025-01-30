@@ -1,5 +1,5 @@
 export function textToResponse(title: string, text: string) {
-	const body = `<!DOCTYPE html>
+  const body = `<!DOCTYPE html>
 <title>${title}</title>
 <link rel="icon" href="data:," />
 <style>
@@ -33,12 +33,12 @@ a:hover {
 </style>
 <div class="container">
 <pre>
-${text}`
-  return new Response(body, { headers: { 'content-type': 'text/html; charset=utf-8' } })
+${text}`;
+  return new Response(body, { headers: { 'content-type': 'text/html; charset=utf-8' } });
 }
 
 export async function responseToInnerText(response: Response): Promise<string> {
-    return `${[...response.headers.entries()].map(([key, value]) => `${key}: ${value}`).join('\n')}
+  return `${[...response.headers.entries()].map(([key, value]) => `${key}: ${value}`).join('\n')}
 
-${await response.text()}`
+${await response.text()}`;
 }
