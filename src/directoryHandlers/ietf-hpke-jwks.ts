@@ -45,7 +45,6 @@ export async function handler(req: Request, env: Bindings): Promise<Response> {
   const response = new Response(body, {
     headers: {
       'content-type': 'application/jwk-set+json',
-      'cache-control': `public, max-age=${Number.parseInt(env.DIRECTORY_CACHE_MAX_AGE_SECONDS)}`,
       'content-length': body.length.toString(),
       date: new Date().toUTCString(),
     },
