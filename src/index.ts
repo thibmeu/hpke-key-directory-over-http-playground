@@ -25,7 +25,7 @@ export function handleHead<T extends (request: Request, env: Bindings) => Promis
 export function index() {
   const body = `# HPKE Key Directory over HTTP
 
-github.com/thibmeu/hpke-key-directory-over-http-playground
+<a href="https://github.com/thibmeu/hpke-key-directory-over-http-playground">github.com/thibmeu/hpke-key-directory-over-http-playground</a>
 
 ## FAQ
 

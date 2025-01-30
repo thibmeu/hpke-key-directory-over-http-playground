@@ -11,10 +11,12 @@
     "enabled": true,
     "head_sampling_rate": 1,
   },
+  "workers_dev": false,
+  "preview_urls": false,
   "r2_buckets": [
     {
       "binding": "KEYS",
-      "bucket_name": "rotation-workflow",
+      "bucket_name": "thibault-test-rotation-workflow",
     },
   ],
   "triggers": {
@@ -28,7 +30,7 @@
   },
   "workflows": [
     {
-      "name": "rotation-workflow",
+      "name": "thibault-test-rotation-workflow",
       "binding": "ROTATION",
       "class_name": "RotationWorkflow",
     },

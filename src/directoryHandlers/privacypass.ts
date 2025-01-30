@@ -43,6 +43,9 @@ GET /.well-known/private-token-issuer-directory
 
 ## Response
 ${await responseToInnerText(response)}
+
+## Notes
+token-type is provided to meet Privacy Pass spec
 `;
   return textToResponse('Privacy Pass Format', text);
 }
