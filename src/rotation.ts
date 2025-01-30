@@ -23,10 +23,16 @@ export class RotationWorkflow extends WorkflowEntrypoint<Bindings, Params> {
   async run(event: WorkflowEvent<Params>, step: WorkflowStep) {
     const env = this.env;
 
-    const rotationResponse = await step.do('rotate', () => rotationHandler(env));
-    console.log(await rotationResponse.text());
-    const clearKeysResponse = await step.do('clear keys', () => clearKeyHandler(env));
-    console.log(await clearKeysResponse.text());
+    const rotationResponse = await step.do('rotate', async () => {
+      const response = await rotationHandler(env);
+      return response.text();
+    });
+    console.log(rotationResponse);
+    const clearKeysResponse = await step.do('clear keys', async () => {
+      const response = await clearKeyHandler(env);
+      return response.text();
+    });
+    console.log(clearKeysResponse);
   }
 }
 
