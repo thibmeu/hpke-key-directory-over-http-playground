@@ -52,7 +52,10 @@ router
   .get('/.well-known/private-token-key-directory', privacypassHandler)
   .post('/admin/clear', (_req, env) => clearKeyHandler(env))
   .post('/admin/rotate', (_req, env) => rotationHandler(env))
-  .all('*', () => Response.redirect('/'));
+  .all('*', async () => {
+    const body = await textToResponse('Not found', '<a href="/">⮪</a>\n# Not found').text();
+    return new Response(body, { status: 404, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  });
 
 export default {
   ...router,
