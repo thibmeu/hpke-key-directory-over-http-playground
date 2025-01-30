@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "asn1js": "^3.0.5",
+    "cbor2": "^1.9.0",
     "itty-router": "^5.0.18"
   }
 }
