@@ -40,6 +40,7 @@ Keys rotate every 5 minutes
 }
 
 router
+  .head('/', index)
   .get('/', index)
   .head('/ietf-hpke-cose/cose-key-set.cbor', handleHead(coseHandler))
   .get('/ietf-hpke-cose/cose-key-set.cbor', coseHandler)
