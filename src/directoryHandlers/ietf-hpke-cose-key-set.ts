@@ -14,5 +14,5 @@ GET /ietf-hpke-cose/cose-key-set.cbor
 ## Response
 Not implemented yet
 `;
-  return textToResponse('Privacy Pass Format', text);
+  return textToResponse('IETF HPKE Cose Key Set Format', text);
 }

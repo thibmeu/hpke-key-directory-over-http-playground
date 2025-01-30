@@ -60,20 +60,8 @@ export default {
 
   async scheduled(_event: ScheduledEvent, env: Bindings, _ectx: ExecutionContext) {
     // dev note: should there be a different flow for each protocol?
-    const id = 'rotation-workflow';
-    let workflow: WorkflowInstance;
-    try {
-      workflow = await env.ROTATION.get(id);
-    } catch (_) {
-      workflow = await env.ROTATION.create({ id });
-    }
+    const workflow = await env.ROTATION.create();
 
-    const status = await workflow.status();
-
-    if (status.status !== 'running') {
-      await workflow.restart();
-    }
-
-    console.log(`started workflow ${id}. Status ${status.status}`);
+    console.log(`started workflow ${workflow.id}`);
   },
 };

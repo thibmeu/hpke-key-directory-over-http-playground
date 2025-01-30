@@ -13,5 +13,5 @@ GET /openid-connect/jwks.json
 ## Response
 Not implemented yet
 `;
-  return textToResponse('Privacy Pass Format', text);
+  return textToResponse('OpenID Connect JWKS Format', text);
 }
