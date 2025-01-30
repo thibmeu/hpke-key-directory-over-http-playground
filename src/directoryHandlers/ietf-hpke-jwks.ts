@@ -25,10 +25,11 @@ export async function handler(req: Request, env: Bindings): Promise<Response> {
     const publicKeyJwk = (await crypto.subtle.exportKey('jwk', publicKey)) as JsonWebKey;
     // List of arguments https://www.iana.org/assignments/jose/jose.xhtml
     return {
-      kty: publicKeyJwk.kty,
-      n: publicKeyJwk.n,
-      e: publicKeyJwk.e,
-      alg: publicKeyJwk.alg,
+      kty: 'EC',
+      crv: 'P-384',
+      x: publicKeyJwk.n, // MUST BE x
+      y: publicKeyJwk.e, // MUST BE y
+      alg: 'HPKE-Base-P384-SHA384-AES256GCM', // TODO: I have no idea if this is the correct way to present a JWK with HPKE
       kid: metadata.tokenKeyID, // self defined
       nbf: Number.parseInt(metadata.notBefore),
     };
