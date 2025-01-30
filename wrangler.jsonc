@@ -4,7 +4,7 @@
  */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "hpke-key-directory-over-http",
+  "name": "key-directory-over-http",
   "main": "src/index.ts",
   "compatibility_date": "2024-10-22",
   "observability": {
