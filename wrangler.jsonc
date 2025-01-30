@@ -14,7 +14,7 @@
   "r2_buckets": [
     {
       "binding": "KEYS",
-      "bucket_name": "thibault-test-rotation-workflow",
+      "bucket_name": "rotation-workflow",
     },
   ],
   "triggers": {
@@ -28,7 +28,7 @@
   },
   "workflows": [
     {
-      "name": "thibault-test-rotation-workflow",
+      "name": "rotation-workflow",
       "binding": "ROTATION",
       "class_name": "RotationWorkflow",
     },
