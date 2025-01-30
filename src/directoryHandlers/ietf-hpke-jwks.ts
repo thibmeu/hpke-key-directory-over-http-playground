@@ -1,25 +1,23 @@
 import { Bindings } from '../bindings';
-import { convertRSASSAPSSToEnc } from '../crypto';
 import { b64Tou8, b64URLtoB64 } from '../encoding/base64';
 import { responseToInnerText, textToResponse } from '../html';
-import { r2Keys, StorageMetadata } from '../rotation';
+import { encryptionKeys, StorageMetadata } from '../rotation';
 
 export async function handler(req: Request, env: Bindings): Promise<Response> {
-  const keys = await r2Keys(env);
+  const keys = await encryptionKeys(env);
 
   const keyToJWK = async (key: R2Object) => {
     const metadata = key.customMetadata as StorageMetadata;
-    const rsaSsaPssPublicKey = b64Tou8(b64URLtoB64(metadata.publicKey));
-    const publicKeyEnc = convertRSASSAPSSToEnc(rsaSsaPssPublicKey);
+    const publicKeyEnc = b64Tou8(b64URLtoB64(metadata.publicKey));
     const publicKey = await crypto.subtle.importKey(
       'spki',
       publicKeyEnc,
       {
-        name: 'RSA-PSS',
-        hash: { name: 'SHA-384' },
+        name: 'ECDH',
+        namedCurve: 'P-384',
       },
       true,
-      ['verify'],
+      [],
     );
 
     const publicKeyJwk = (await crypto.subtle.exportKey('jwk', publicKey)) as JsonWebKey;
@@ -27,8 +25,8 @@ export async function handler(req: Request, env: Bindings): Promise<Response> {
     return {
       kty: 'EC',
       crv: 'P-384',
-      x: publicKeyJwk.n, // MUST BE x
-      y: publicKeyJwk.e, // MUST BE y
+      x: publicKeyJwk.x,
+      y: publicKeyJwk.y,
       alg: 'HPKE-Base-P384-SHA384-AES256GCM', // TODO: I have no idea if this is the correct way to present a JWK with HPKE
       kid: metadata.tokenKeyID, // self defined
       nbf: Number.parseInt(metadata.notBefore),

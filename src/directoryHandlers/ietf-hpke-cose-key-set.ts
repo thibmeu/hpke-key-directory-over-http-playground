@@ -1,27 +1,25 @@
 import { encode } from 'cbor2';
 import { Bindings } from '../bindings';
-import { convertRSASSAPSSToEnc } from '../crypto';
 import { b64Tou8, b64URLtoB64 } from '../encoding/base64';
 import { responseToInnerText, textToResponse } from '../html';
-import { r2Keys, StorageMetadata } from '../rotation';
+import { encryptionKeys, StorageMetadata } from '../rotation';
 import { hexEncode } from '../encoding/hex';
 
 export async function handler(req: Request, env: Bindings): Promise<Response> {
-  const keys = await r2Keys(env);
+  const keys = await encryptionKeys(env);
 
   const keyToCoseKeyDecoded = async (key: R2Object) => {
     const metadata = key.customMetadata as StorageMetadata;
-    const rsaSsaPssPublicKey = b64Tou8(b64URLtoB64(metadata.publicKey));
-    const publicKeyEnc = convertRSASSAPSSToEnc(rsaSsaPssPublicKey);
+    const publicKeyEnc = b64Tou8(b64URLtoB64(metadata.publicKey));
     const publicKey = await crypto.subtle.importKey(
       'spki',
       publicKeyEnc,
       {
-        name: 'RSA-PSS',
-        hash: { name: 'SHA-384' },
+        name: 'ECDH',
+        namedCurve: 'P-384',
       },
       true,
-      ['verify'],
+      [],
     );
     const publicKeyJwk = (await crypto.subtle.exportKey('jwk', publicKey)) as JsonWebKey;
 
@@ -33,8 +31,8 @@ export async function handler(req: Request, env: Bindings): Promise<Response> {
     // publicKeyCoseKeyMap.set(4, [3]); // not required for public keys - encrypt https://datatracker.ietf.org/doc/html/rfc8152#section-7.1
     publicKeyCoseKeyMap.set(-1, 2); // P-384 https://www.iana.org/assignments/cose/cose.xhtml#elliptic-curves
     // TODO: generate a real key, don't reuse a signature scheme
-    publicKeyCoseKeyMap.set(-2, b64Tou8(b64URLtoB64(publicKeyJwk.n!))); // MUST BE x
-    publicKeyCoseKeyMap.set(-3, b64Tou8(b64URLtoB64(publicKeyJwk.e!))); // MUST BE y
+    publicKeyCoseKeyMap.set(-2, b64Tou8(b64URLtoB64(publicKeyJwk.x!)));
+    publicKeyCoseKeyMap.set(-3, b64Tou8(b64URLtoB64(publicKeyJwk.y!)));
 
     // List of arguments https://www.iana.org/assignments/jose/jose.xhtml
     return publicKeyCoseKeyMap;

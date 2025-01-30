@@ -2,10 +2,10 @@ import { Bindings } from '../bindings';
 import { convertRSASSAPSSToEnc } from '../crypto';
 import { b64Tou8, b64URLtoB64 } from '../encoding/base64';
 import { responseToInnerText, textToResponse } from '../html';
-import { r2Keys, StorageMetadata } from '../rotation';
+import { signatureKeys, StorageMetadata } from '../rotation';
 
 export async function handler(req: Request, env: Bindings): Promise<Response> {
-  const keys = await r2Keys(env);
+  const keys = await signatureKeys(env);
 
   const keyToJWK = async (key: R2Object) => {
     const metadata = key.customMetadata as StorageMetadata;

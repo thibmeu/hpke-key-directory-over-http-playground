@@ -1,12 +1,12 @@
 import { Bindings } from '../bindings';
 import { hexEncode } from '../encoding/hex';
 import { responseToInnerText, textToResponse } from '../html';
-import { r2Keys, StorageMetadata } from '../rotation';
+import { signatureKeys, StorageMetadata } from '../rotation';
 
 export async function handler(req: Request, env: Bindings): Promise<Response> {
   // todo: consider cache
 
-  const keys = await r2Keys(env);
+  const keys = await signatureKeys(env);
 
   const directory = {
     'issuer-request-uri': '/token-request',
